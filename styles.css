@@ -1,0 +1,33 @@
+.container{
+    width: 1200px;
+    height: 900px;
+    margin: 0 auto;
+}
+.tree {
+    height: 75%;
+}
+.root{
+    width: 1200px;
+    text-align: center;
+    font-size: 30px;
+}
+
+.newNode {
+    text-align: center;
+    font-size: 30px;
+}
+.addNumber{
+    height: 25%;
+    text-align: center;
+}
+.button {
+    margin: 20px;
+    font-size: 45px;
+}
+.circleNumber{
+    background-color: aqua;
+    border-radius: 50%;
+    height: 35px;
+    width: 35px;
+    margin: 0 auto;
+}
