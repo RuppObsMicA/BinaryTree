@@ -61,7 +61,7 @@ const tree = new Tree(root);
 
 document.querySelector(".button").addEventListener("click", getNumberFromTextarea);
 
-function getNumberFromTextarea(){
+function getNumberFromTextarea(){  //starts when we click on the button
     const numberFromTextarea = document.querySelector(".textArea");
     if (Number.isNaN(Number(numberFromTextarea.value))){
         resetPlaceholder();
@@ -70,7 +70,7 @@ function getNumberFromTextarea(){
         resetPlaceholder();
         numberFromTextarea.placeholder = "Wrong number, enter a number";
     } else {
-        tree.addNode(numberFromTextarea.value);
+        tree.addNode(Number(numberFromTextarea.value));
         resetPlaceholder();
     }
 
@@ -78,13 +78,10 @@ function getNumberFromTextarea(){
 
 function drawTree (currentNode, newNode){
     const currentDiv = document.getElementById(currentNode.value);   //receive a parent div to insert a child inside
-    const newDiv = document.createElement("div");
-    setDataOfNewChild();
-    if (currentNode.rightChild === null || currentNode.leftChild === null)    //Adds br if we add the first child only, if we add the second child we don't need one more br
-        currentDiv.appendChild(document.createElement("br"));
-    currentDiv.appendChild(newDiv);
+    currentDiv.appendChild(setDataOfNewChild());
 
     function setDataOfNewChild(){
+        const newDiv = document.createElement("div");
         newDiv.classList.add("newNode");
         newDiv.id = newNode.value;   //Need to set it because we draw every new node based on parent's id
         newDiv.style.width = document.getElementById(currentNode.value).offsetWidth/2+"px";   //receive width of a parent
@@ -94,6 +91,9 @@ function drawTree (currentNode, newNode){
             newDiv.style.float = "right";
         }
         newDiv.innerHTML = "<div class='circleNumber'>" + newNode.value + "</div>";
+        if (currentNode.rightChild === null || currentNode.leftChild === null)    //Adds br if we add the first child only, if we add the second child we don't need one more br
+            currentDiv.appendChild(document.createElement("br"));
+        return newDiv;
     }
 }
 

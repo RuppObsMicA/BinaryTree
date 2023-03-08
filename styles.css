@@ -5,6 +5,7 @@
 }
 .tree {
     height: 75%;
+    width: 100%;
 }
 .root{
     width: 1200px;
@@ -27,7 +28,7 @@
 .circleNumber{
     background-color: aqua;
     border-radius: 50%;
-    height: 35px;
-    width: 35px;
+    width: fit-content;
+    min-width: 30px;
     margin: 0 auto;
 }
