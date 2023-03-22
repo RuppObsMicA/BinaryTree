@@ -11,14 +11,17 @@
 </head>
 <body>
     <div class="wrapper">
+        <canvas id="canvas"></canvas>
         <div class="container">
             <div class="tree">
                 <div class="root" id="10"><div class="circleNumber">10</div></div>
             </div>
             <div class="addNumber">
-                <textarea class="textArea" placeholder="Enter a number"></textarea>
-                <br>
-                <button class="button">Add number</button>
+                <form id="form">
+                    <input type="text" name="rowForNumber" class="textArea" placeholder="Enter a number">
+                    <br>
+                    <input type="submit" class="button" value="Add number">
+                </form>
             </div>
         </div>
     </div>

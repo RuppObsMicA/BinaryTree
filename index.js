@@ -1,7 +1,7 @@
 function Tree (root){
 
     this.root = root;
-    this.addNode = addNode;    //why don't we use parenthesis here?
+    this.addNode = addNode;
 
     function addNode(value){
         const node = new Node(value);
@@ -29,9 +29,8 @@ function Tree (root){
                 drawTree(currentNode, newNode);
             }
         } else {
-            resetPlaceholder();
-            document.querySelector(".textArea").setAttribute("placeholder", "Duplicate values");
-            throw new Error("Duplicate values")
+            resetPlaceholder("Duplicate values");
+            throw new Error("Duplicates");
         }
     }
 
@@ -44,7 +43,6 @@ function Node(value){
     this.addRightChild = addRightChild;
     this.addLeftChild = addLeftChild;
 
-    //why don't we have a function to create a parent
     function addRightChild(node){
         node.parent = this;
         this.rightChild = node;
@@ -59,47 +57,77 @@ function Node(value){
 const root = new Node(10);
 const tree = new Tree(root);
 
-document.querySelector(".button").addEventListener("click", getNumberFromTextarea);
+//canvas
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = "700";
 
-function getNumberFromTextarea(){  //starts when we click on the button
-    const numberFromTextarea = document.querySelector(".textArea");
-    if (Number.isNaN(Number(numberFromTextarea.value))){
-        resetPlaceholder();
-        numberFromTextarea.placeholder = "Wrong number, enter a number";
-    } else if (numberFromTextarea.value === ""){
-        resetPlaceholder();
-        numberFromTextarea.placeholder = "Wrong number, enter a number";
+const textarea = document.querySelector(".textArea");
+const form = document.getElementById("form");
+form.addEventListener("submit", getNumberFromTextarea);
+
+function getNumberFromTextarea(e){  //starts when we click on the button
+    e.preventDefault();
+
+    // let secondOptionOfReceivedValue = this.rowForNumber.value; // just to show it also works
+    // console.log(secondOptionOfReceivedValue);
+
+    let newNUmber = e.target[0].value;
+    if (Number.isNaN(Number(newNUmber)) || newNUmber === ""){
+        resetPlaceholder("Wrong number, enter a number");
     } else {
-        tree.addNode(Number(numberFromTextarea.value));
-        resetPlaceholder();
+        tree.addNode(Number(newNUmber));
+        resetPlaceholder("Enter a number");
     }
-
 }
 
 function drawTree (currentNode, newNode){
     const currentDiv = document.getElementById(currentNode.value);   //receive a parent div to insert a child inside
-    currentDiv.appendChild(setDataOfNewChild());
 
-    function setDataOfNewChild(){
-        const newDiv = document.createElement("div");
-        newDiv.classList.add("newNode");
-        newDiv.id = newNode.value;   //Need to set it because we draw every new node based on parent's id
-        newDiv.style.width = document.getElementById(currentNode.value).offsetWidth/2+"px";   //receive width of a parent
-        if (currentNode.value > newNode.value){   //Check if we need to move a new div left or right
-            newDiv.style.float = "left";
-        } else {
-            newDiv.style.float = "right";
-        }
-        newDiv.innerHTML = "<div class='circleNumber'>" + newNode.value + "</div>";
-        if (currentNode.rightChild === null || currentNode.leftChild === null)    //Adds br if we add the first child only, if we add the second child we don't need one more br
-            currentDiv.appendChild(document.createElement("br"));
-        return newDiv;
+    // setting DataOfNewChild
+    const newDiv = document.createElement("div");
+    newDiv.classList.add("newNode");
+    newDiv.id = newNode.value;   //Need to set it because we draw every new node based on parent's id
+    newDiv.style.width = document.getElementById(currentNode.value).offsetWidth / 2+"px";   //receive width of a parent
+    newDiv.innerHTML = "<div class='circleNumber'>" + newNode.value + "</div>";
+    if (currentNode.value > newNode.value){   //Check if we need to move a new div left or right
+        newDiv.style.float = "left";
+    } else {
+        newDiv.style.float = "right";
     }
+    if (currentNode.rightChild === null || currentNode.leftChild === null)    //Adds br if we add the first child only, if we add the second child we don't need one more br
+          currentDiv.appendChild(document.createElement("br"));
+
+    //create a new element
+    currentDiv.appendChild(newDiv);
+
+                                // create two variable to receive a div circle inside rectangle divs
+    const circleInParentDiv = currentDiv.firstChild.getBoundingClientRect();
+    const circleInNewDiv = newDiv.firstChild.getBoundingClientRect();
+
+                                //try to set point closer to the middle of circle
+                                //scrollY adds additional defend if scrolled the page
+    let xOfParent = circleInParentDiv.x + circleInParentDiv.width/2;
+    let yOfParent = circleInParentDiv.y + circleInParentDiv.height/2 + window.scrollY;
+    let xOfChild = circleInNewDiv.x + circleInNewDiv.width/2;
+    let yOfChild = circleInNewDiv.y + circleInNewDiv.height/2 + window.scrollY;
+
+    createLine(xOfParent, yOfParent, xOfChild, yOfChild);
 }
 
-function resetPlaceholder(){     //Changes placeholder in textarea
-    document.querySelector(".textArea").setAttribute("placeholder", "Enter a number");
-    document.querySelector(".textArea").value = null;
+function resetPlaceholder(message){     //Changes placeholder in textarea
+    textarea.setAttribute("placeholder", message);
+    textarea.value = "";
+}
+
+function createLine(xParent, yParent, xChild, yChild){
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = "aqua";
+    ctx.beginPath();
+    ctx.moveTo(xParent, yParent);
+    ctx.lineTo(xChild, yChild);
+    ctx.stroke();
 }
 
 
